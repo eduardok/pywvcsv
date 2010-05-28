@@ -1,5 +1,5 @@
 from wvtest import *
-from pywvcsv import *
+from wvcsv import *
 
 import sys
 
@@ -44,7 +44,7 @@ def test_getline_from_memory():
 
 @wvtest
 def test_getline_from_file():
-    r = CsvReader(open("pywvcsv/t/data/test.csv"))
+    r = CsvReader(open("t/data/test.csv"))
     i = iter(r)
     WVPASSEQ(i.next(), "abc,def")
     WVPASSEQ(i.next(), 'ghi,"j\nkl"')

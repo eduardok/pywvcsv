@@ -165,7 +165,7 @@ static PyMethodDef wvcsv_methods[] = {
     { NULL, NULL, 0, NULL },  // sentinel
 };
 
-PyMODINIT_FUNC initpywvcsv()
+PyMODINIT_FUNC init_wvcsv()
 {
-    Py_InitModule("pywvcsv", wvcsv_methods);
+    Py_InitModule("_wvcsv", wvcsv_methods);
 }

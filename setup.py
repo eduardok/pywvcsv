@@ -8,8 +8,8 @@ WVSTREAMSLIB="%s/%s-linux" % (WVBUILD,
 includes = [WVSTREAMS, "%s/include" % WVSTREAMSLIB,
      "/usr/include/wvstreams", "/usr/include/xplc-0.3.13"]
 
-pywvcsv_mod = Extension('pywvcsv',
-                        sources=['pywvcsvmodule.cc',
+_wvcsv_mod = Extension('_wvcsv',
+                        sources=['_wvcsvmodule.cc',
                                  'wvcsv.cc'],
                         include_dirs=includes + ['../cli'],
                         library_dirs=[WVSTREAMSLIB],
@@ -18,4 +18,4 @@ pywvcsv_mod = Extension('pywvcsv',
 setup(name='Python_WvCsv',
       version='0.1',
       description='WvCsv bindings for Python',
-      ext_modules=[pywvcsv_mod])
+      ext_modules=[_wvcsv_mod])

@@ -1,4 +1,4 @@
-from pywvcsv import *
+from _wvcsv import *
 
 class CsvReader:
     def __init__(self, data):
