@@ -71,7 +71,9 @@ struct CsvContents
     {
 	delete contents;
 	if (ref)
+	{
 	    Py_DECREF(ref);
+        }
     }
 };
 

@@ -3,7 +3,7 @@
 
 all: pywvcsv.so
 
-pywvcsv.so: ../cli/wvcsv.cc pywvcsvmodule.cc setup.py
+pywvcsv.so: wvcsv.cc pywvcsvmodule.cc setup.py
 	@python setup.py build
 	@cp build/*/pywvcsv.so .
 
