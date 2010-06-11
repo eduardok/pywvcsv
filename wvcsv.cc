@@ -78,13 +78,17 @@ char *wvcsv_readline(WvStream &stream, WvBuf &buf)
 }
 
 
-char *wvcsv_dequote(const char *in, char *out)
+char *wvcsv_dequote(const char *in, char *out, size_t *length)
 {
     if (!*in)
+    {
+	if (length) *length = 0;
 	return NULL; // unquoted blankness is a null string
+    }
     else if (!strcmp(in, "\"\""))
     {
 	*out = 0;
+	if (length) *length = 0;
 	return out; // quoted blankness is an empty string
     }
     else
@@ -113,23 +117,26 @@ char *wvcsv_dequote(const char *in, char *out)
 		*optr++ = *cptr;
 	}
 	*optr = 0;
+	if (length) *length = optr - out;
 	return out;
     }
 }
 
 
-inline char *dequote_or_not(char *tofutz, bool dequote)
+inline char *dequote_or_not(char *tofutz, bool dequote, size_t *length)
 {
-    return dequote ? wvcsv_dequote(tofutz, tofutz) : tofutz;
+    return dequote ? wvcsv_dequote(tofutz, tofutz, length) : tofutz;
 }
 
-void wvcsv_splitline(std::vector<char*> &l, char *s, size_t slen,
+void wvcsv_splitline(std::vector<char*> &l, std::vector<size_t> &ll,
+		     char *s, size_t slen,
 		     bool dequote_values)
 {
     bool inquote = false;
     int istart = 0;
     
     l.clear();
+    ll.clear();
     
     for (size_t i = 0; i < slen; i++)
     {
@@ -139,18 +146,27 @@ void wvcsv_splitline(std::vector<char*> &l, char *s, size_t slen,
 	{
 	    // end of a column
 	    s[i] = 0;
-	    l.push_back(dequote_or_not(s+istart, dequote_values));
+	    size_t length = i - istart;
+	    char *p = dequote_or_not(s+istart, dequote_values, &length);
+	    l.push_back(p);
+	    ll.push_back(length);
+	    //assert(!p || strlen(p) == length);
 	    istart = i + 1;
 	}
     }
-    l.push_back(dequote_or_not(s+istart, dequote_values));
+    
+    size_t xlength = slen - istart;
+    l.push_back(dequote_or_not(s+istart, dequote_values, &xlength));
+    ll.push_back(xlength);
+    assert(l.size() == ll.size());
 }
 
 
 void wvcsv_splitline_slow(WvStringList &l, char *s, size_t slen)
 {
     std::vector<char*> v;
-    wvcsv_splitline(v, s, slen);
+    std::vector<size_t> lv;
+    wvcsv_splitline(v, lv, s, slen);
     
     for (std::vector<char*>::iterator i = v.begin(); i < v.end(); i++)
 	l.append(*i);
@@ -175,7 +191,10 @@ WvCsvIter::WvCsvIter(WvStream &_stream, bool expect_TABLE, bool expect_headers,
 	// pointers into it
 	headerline = wvcsv_readline(stream, buf);
 	if (headerline)
-	    wvcsv_splitline(headers, headerline.edit(), headerline.len());
+	{
+	    std::vector<size_t> lv;
+	    wvcsv_splitline(headers, lv, headerline.edit(), headerline.len());
+	}
 	else
 	    err.set("CSV header line missing");
     }
@@ -189,6 +208,6 @@ bool WvCsvIter::next()
     if (!err.isok()) return false;
     char *line = wvcsv_readline(stream, buf);
     if (!line || !line[0] || !strcmp(line, "\r")) return false;
-    wvcsv_splitline(cols, line, strlen(line), dequote);
+    wvcsv_splitline(cols, lengths, line, strlen(line), dequote);
     return true;
 }

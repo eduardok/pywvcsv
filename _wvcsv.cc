@@ -39,11 +39,12 @@ static PyObject *pywvcsv_quote(PyObject *self, PyObject *args)
 static PyObject *pywvcsv_splitline(PyObject *self, PyObject *args)
 {
     char *line;
-    std::vector<char *>v;
+    std::vector<char *> v;
+    std::vector<size_t> lengths;
 
     if (!PyArg_ParseTuple(args, "et", "utf-8", &line))
 	return NULL;
-    wvcsv_splitline(v, line, strlen(line), true);
+    wvcsv_splitline(v, lengths, line, strlen(line), true);
     Py_ssize_t l = v.size();
     PyObject *r = PyTuple_New(l);
     for (Py_ssize_t i = 0; i < l; ++i)

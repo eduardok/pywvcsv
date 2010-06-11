@@ -43,7 +43,7 @@ WvString wvcsv_quote(WvStringParm s);
  * 
  * Use wvcsv_readline() and wvcsv_splitline() instead.
  */
-char *wvcsv_dequote(const char *in, char *out);
+char *wvcsv_dequote(const char *in, char *out, size_t *length = NULL);
 
 /**
  * Given one "line" of a CSV file, split and decode the columns into l.
@@ -54,7 +54,8 @@ char *wvcsv_dequote(const char *in, char *out);
  * WARNING: a "line" of a CSV file may contain newlines.  You should read the
  * file using wvcsv_readline() if you don't want to screw up.
  */
-void wvcsv_splitline(std::vector<char*> &l, char *s, size_t slen,
+void wvcsv_splitline(std::vector<char*> &l, std::vector<size_t> &ll,
+		     char *s, size_t slen,
 		     bool dequote_values = true);
 
 /**
@@ -93,9 +94,10 @@ class WvCsvIter
     WvStream &stream;
     WvDynBuf buf;
     WvString headerline;
-    mutable std::vector<char*> cols;
     bool dequote;
+    mutable std::vector<char*> cols;
 public:
+    mutable std::vector<size_t> lengths;
     WvString firstline;
     WvError err;
     std::vector<char*> headers;
