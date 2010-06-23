@@ -98,7 +98,7 @@ static PyObject *pywvcsv_setup(PyObject *self, PyObject *args)
 	}
 
 	//Handle case of file
-	c = new CsvContents(new WvFdStream(dup(PyFile_AsFile(f)->_fileno)), f);
+	c = new CsvContents(new WvFdStream(dup(fileno(PyFile_AsFile(f)))), f);
     }
     else
     {
