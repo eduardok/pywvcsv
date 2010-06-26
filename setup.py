@@ -10,7 +10,7 @@ includes = [WVSTREAMS, "%s/include" % WVSTREAMSLIB,
      "/usr/local/include/wvstreams"]
 
 _wvcsv_mod = Extension('_wvcsv',
-                        sources=['_wvcsvmodule.cc',
+                        sources=['_wvcsv.cc',
                                  'wvcsv.cc'],
                         include_dirs=includes + ['../cli'],
                         library_dirs=[WVSTREAMSLIB],

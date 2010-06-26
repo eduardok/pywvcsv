@@ -3,7 +3,7 @@
 
 all: _wvcsv.so
 
-_wvcsv.so: wvcsv.cc _wvcsvmodule.cc setup.py
+_wvcsv.so: wvcsv.cc _wvcsv.cc setup.py
 	@python setup.py build
 	@cp build/*/_wvcsv.so .
 	
@@ -16,4 +16,5 @@ test:
 	./wvtestrun $(MAKE) runtests
 
 clean:
-	rm -rf build _wvcsv.so *.pyc t/*.pyc .*~ *~
+	rm -rf build
+	rm -f *.o *.so *.pyc t/*.pyc .*~ *~

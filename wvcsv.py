@@ -1,15 +1,15 @@
 from _wvcsv import *
 
-class CsvReader:
+class Reader:
     def __init__(self, data):
-        self.id = csvsetup(data);
+        self.id = setup(data);
 
     def __iter__(self):
         while True:
-            r = csvreadline(self.id)
+            r = readline(self.id)
             if r is None:
                 break
             yield r
 
     def __del__(self):
-        csvtakedown(self.id)
+        takedown(self.id)

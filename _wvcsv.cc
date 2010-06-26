@@ -150,17 +150,17 @@ static PyObject *pywvcsv_readline(PyObject *self, PyObject *args)
 
 
 static PyMethodDef wvcsv_methods[] = {
-    { "csvdequote", pywvcsv_dequote, METH_VARARGS,
+    { "dequote", pywvcsv_dequote, METH_VARARGS,
 	"Dequote one CSV cell." },
-    { "csvquote", pywvcsv_quote, METH_VARARGS,
+    { "quote", pywvcsv_quote, METH_VARARGS,
 	"Quote one CSV cell." },
-    { "csvsplitline", pywvcsv_splitline, METH_VARARGS,
+    { "splitline", pywvcsv_splitline, METH_VARARGS,
 	"Take one CSV-encoded line and split it, decoding each cell." },
-    { "csvreadline", pywvcsv_readline, METH_VARARGS,
+    { "readline", pywvcsv_readline, METH_VARARGS,
 	"Read one CSV-encoded line from preset buffer." },
-    { "csvsetup", pywvcsv_setup, METH_VARARGS,
+    { "setup", pywvcsv_setup, METH_VARARGS,
 	"Set up CSV reading stuff." },
-    { "csvtakedown", pywvcsv_takedown, METH_VARARGS,
+    { "takedown", pywvcsv_takedown, METH_VARARGS,
 	"Take down CSV reading stuff." },
     { NULL, NULL, 0, NULL },  // sentinel
 };
