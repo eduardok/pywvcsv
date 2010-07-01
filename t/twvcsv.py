@@ -1,5 +1,6 @@
 from wvtest import *
 import wvcsv
+from wvcsv import _wvcsv
 
 import sys
 
@@ -21,21 +22,21 @@ def test_dequote():
 
 @wvtest
 def test_splitline():
-    WVPASSEQ(wvcsv.splitline(","), (None, None))
-    WVPASSEQ(wvcsv.splitline(",def"), (None, 'def'))
-    WVPASSEQ(wvcsv.splitline("abc,def"), ('abc', 'def'))
-    WVPASSEQ(wvcsv.splitline('"abc,",def'), ('abc,', 'def'))
-    WVPASSEQ(wvcsv.splitline('"a""bc,",def'), ('a"bc,', 'def'))
-    WVPASSEQ(wvcsv.splitline('"a""bc,",",def"'), ('a"bc,', ',def'))
-    WVPASSEQ(wvcsv.splitline('"a""bc,",",def"""'), ('a"bc,', ',def"'))
-    WVPASSEQ(wvcsv.splitline('"a""bc,",,",def"""'), ('a"bc,', None, ',def"'))
+    WVPASSEQ(_wvcsv.splitline(","), (None, None))
+    WVPASSEQ(_wvcsv.splitline(",def"), (None, 'def'))
+    WVPASSEQ(_wvcsv.splitline("abc,def"), ('abc', 'def'))
+    WVPASSEQ(_wvcsv.splitline('"abc,",def'), ('abc,', 'def'))
+    WVPASSEQ(_wvcsv.splitline('"a""bc,",def'), ('a"bc,', 'def'))
+    WVPASSEQ(_wvcsv.splitline('"a""bc,",",def"'), ('a"bc,', ',def'))
+    WVPASSEQ(_wvcsv.splitline('"a""bc,",",def"""'), ('a"bc,', ',def"'))
+    WVPASSEQ(_wvcsv.splitline('"a""bc,",,",def"""'), ('a"bc,', None, ',def"'))
 
 @wvtest
 def test_getline_from_memory():
     r = wvcsv.Reader("ABCDEFG,efgh\n\"a\nbcd\",1234")
     i = iter(r)
-    WVPASSEQ(i.next(), "ABCDEFG,efgh")
-    WVPASSEQ(i.next(), '"a\nbcd",1234')
+    WVPASSEQ(i.next(), ('ABCDEFG','efgh'))
+    WVPASSEQ(i.next(), ('a\nbcd','1234'))
     try:
         i.next()
         WVFAIL("i.next() should have thrown StopIteration")
@@ -46,11 +47,11 @@ def test_getline_from_memory():
 def test_getline_from_file():
     r = wvcsv.Reader(open("data/test.csv"))
     i = iter(r)
-    WVPASSEQ(i.next(), "abc,def")
-    WVPASSEQ(i.next(), 'ghi,"j\nkl"')
-    WVPASSEQ(i.next(), '1234,5678')
-    WVPASSEQ(i.next(), '')
-    WVPASSEQ(i.next(), "9,10")
+    WVPASSEQ(i.next(), ('abc','def'))
+    WVPASSEQ(i.next(), ('ghi', 'j\nkl'))
+    WVPASSEQ(i.next(), ('1234', '5678'))
+    WVPASSEQ(i.next(), (None,))
+    WVPASSEQ(i.next(), ('9', '10'))
     try:
         i.next()
         WVFAIL("i.next() should have thrown StopIteration")
